@@ -24,19 +24,6 @@ spring:
     redis:
       host: ${REDIS_HOST:localhost}
       port: ${REDIS_PORT:6379}
-  kafka:
-    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
-    consumer:
-      group-id: user-service-group
-      auto-offset-reset: earliest
-    producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-    admin:
-      auto-create: true
-    # REST-mode: prevent Kafka listener threads from starting when broker is unavailable
-    listener:
-      auto-startup: false
   cache:
     type: redis
     redis:
@@ -76,9 +63,3 @@ logging:
   # logback-spring.xml handles pattern and file rolling
   # Set LOG_FILE env var to override log directory (default: ./logs/user-service.log)
 
-app:
-  kafka:
-    topics:
-      user-registered: user.registered
-      user-created: user.created
-      user-login: user.login

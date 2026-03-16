@@ -5,7 +5,6 @@ import com.ecommerce.user.dto.UpdateUserRequest;
 import com.ecommerce.user.dto.UserRequest;
 import com.ecommerce.user.dto.UserResponse;
 import com.ecommerce.user.dto.UserResponse;
-import com.ecommerce.events.UserCreatedEvent;
 import com.ecommerce.user.dto.AddressRequest;
 import com.ecommerce.user.dto.AddressResponse;
 import java.util.List;
@@ -24,8 +23,6 @@ public interface UserService {
     UserResponse updateUser(UUID id, UpdateUserRequest request);
 
     void deleteUser(UUID id);
-
-    void handleUserRegistered(UserCreatedEvent event);
 
     List<AddressResponse> getUserAddresses(UUID userId);
     

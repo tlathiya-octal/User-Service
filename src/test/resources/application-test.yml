@@ -12,23 +12,6 @@ spring:
         dialect: org.hibernate.dialect.H2Dialect
   cache:
     type: simple
-  kafka:
-    bootstrap-servers: ${spring.embedded.kafka.brokers}
-    consumer:
-      group-id: user-service-test-group
-      auto-offset-reset: earliest
-    producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-    admin:
-      auto-create: true
-
-app:
-  kafka:
-    topics:
-      user-registered: user.registered
-      user-created: user.created
-      user-login: user.login
 
 eureka:
   client:

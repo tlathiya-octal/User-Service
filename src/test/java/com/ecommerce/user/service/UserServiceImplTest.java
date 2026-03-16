@@ -12,9 +12,8 @@ import com.ecommerce.user.dto.UserRequest;
 import com.ecommerce.user.dto.UserResponse;
 import com.ecommerce.user.entity.AccountStatus;
 import com.ecommerce.user.entity.User;
-import com.ecommerce.user.config.KafkaTopicsProperties;
-import com.ecommerce.user.event.EventPublisher;
 import com.ecommerce.user.exception.DuplicateUserException;
+import com.ecommerce.user.repository.AddressRepository;
 import com.ecommerce.user.exception.UserNotFoundException;
 import com.ecommerce.user.mapper.UserMapper;
 import com.ecommerce.user.repository.UserRepository;
@@ -40,17 +39,14 @@ class UserServiceImplTest {
     private UserMapper userMapper;
 
     @Mock
-    private EventPublisher eventPublisher;
-
-    @Mock
-    private KafkaTopicsProperties kafkaTopicsProperties;
+    private AddressRepository addressRepository;
 
     private UserServiceImpl userService;
 
     @BeforeEach
     void setUp() {
         CacheManager cacheManager = new ConcurrentMapCacheManager("users");
-//        userService = new UserServiceImpl(userRepository, userMapper, cacheManager, eventPublisher, kafkaTopicsProperties);
+        userService = new UserServiceImpl(userRepository, userMapper, cacheManager, addressRepository);
     }
 
     @Test

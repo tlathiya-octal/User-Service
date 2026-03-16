@@ -1,14 +1,12 @@
 package com.ecommerce.user.service.impl;
 
-import com.ecommerce.events.UserCreatedEvent;
-import com.ecommerce.user.config.KafkaTopicsProperties;
+//import com.ecommerce.events.UserCreatedEvent;
 import com.ecommerce.user.dto.PagedResponse;
 import com.ecommerce.user.dto.UpdateUserRequest;
 import com.ecommerce.user.dto.UserRequest;
 import com.ecommerce.user.dto.UserResponse;
 import com.ecommerce.user.entity.AccountStatus;
 import com.ecommerce.user.entity.User;
-import com.ecommerce.user.event.EventPublisher;
 import com.ecommerce.user.exception.DuplicateUserException;
 import com.ecommerce.user.exception.DuplicateUserException;
 import com.ecommerce.user.exception.UserNotFoundException;
@@ -21,7 +19,6 @@ import com.ecommerce.user.dto.AddressResponse;
 import com.ecommerce.user.entity.Address;
 import java.util.List;
 import java.util.Locale;
-import java.time.Instant;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -48,8 +45,6 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final CacheManager cacheManager;
-    private final EventPublisher eventPublisher;
-    private final KafkaTopicsProperties kafkaTopicsProperties;
     private final AddressRepository addressRepository;
 
     @Override
@@ -152,54 +147,6 @@ public class UserServiceImpl implements UserService {
         userRepository.delete(user);
         evictEmail(user.getEmail());
         log.info("Soft deleted user profile id={}", id);
-    }
-
-    @Override
-    @Transactional
-    public void handleUserRegistered(UserCreatedEvent event) {
-        if (event == null || event.userId() == null || event.email() == null) {
-            log.warn("Skipping user registration event due to missing data");
-            return;
-        }
-
-        String normalizedEmail = normalizeEmail(event.email());
-        if (userRepository.existsById(event.userId()) || 
-            userRepository.existsByEmailIgnoreCase(normalizedEmail) ||
-            (event.phone() != null && userRepository.existsByPhoneNumber(event.phone()))) {
-            log.info("User profile already exists or duplicate identifier for email={} userId={}", normalizedEmail, event.userId());
-            return;
-        }
-
-        User user = new User();
-        user.setId(event.userId());
-        user.setEmail(normalizedEmail);
-        user.setFirstName(event.firstName() != null ? event.firstName() : DEFAULT_FIRST_NAME);
-        user.setLastName(event.lastName() != null ? event.lastName() : DEFAULT_LAST_NAME);
-        user.setPhoneNumber(event.phone());
-        user.setAccountStatus(AccountStatus.ACTIVE);
-
-        User savedUser = userRepository.save(user);
-        UserResponse response = userMapper.toResponse(savedUser);
-        cacheById(response);
-        cacheByEmail(response);
-
-        Instant createdAt = savedUser.getCreatedAt();
-        if (createdAt == null) {
-            createdAt = event.createdAt() != null ? event.createdAt() : Instant.now();
-        }
-
-        UserCreatedEvent createdEvent = new UserCreatedEvent(
-                savedUser.getId(),
-                savedUser.getEmail(),
-                savedUser.getPhoneNumber(),
-                savedUser.getFirstName(),
-                savedUser.getLastName(),
-                event.role(),
-                createdAt
-        );
-        eventPublisher.publishAfterCommit(kafkaTopicsProperties.getUserCreated(), createdEvent);
-
-        log.info("Created user profile from registration event email={}", normalizedEmail);
     }
 
     private User findUser(UUID id) {
