@@ -13,7 +13,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 @Mapper(componentModel = "spring")
 public interface UserMapper {
 
-    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "id", ignore = true)  // id is applied explicitly in service when userId is present
     @Mapping(target = "accountStatus", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)

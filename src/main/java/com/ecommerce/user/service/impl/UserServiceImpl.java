@@ -66,6 +66,13 @@ public class UserServiceImpl implements UserService {
         User user = userMapper.toEntity(request);
         user.setEmail(normalizedEmail);
         user.setAccountStatus(AccountStatus.ACTIVE);
+
+        // REST-mode: when auth-service supplies a userId, persist the profile with
+        // the same primary key so both databases are aligned without a mapping table.
+        if (request.userId() != null) {
+            user.setId(request.userId());
+        }
+
         User savedUser = userRepository.save(user);
 
         UserResponse response = userMapper.toResponse(savedUser);

@@ -34,6 +34,9 @@ spring:
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
     admin:
       auto-create: true
+    # REST-mode: prevent Kafka listener threads from starting when broker is unavailable
+    listener:
+      auto-startup: false
   cache:
     type: redis
     redis:
@@ -64,7 +67,14 @@ management:
 logging:
   level:
     root: INFO
-    com.ecommerce.user: INFO
+    com.ecommerce.user: DEBUG
+    org.springframework.security: WARN
+    org.hibernate.orm.jdbc.bind: WARN
+    com.netflix: WARN
+    io.micrometer: WARN
+    org.springframework.data.redis: INFO
+  # logback-spring.xml handles pattern and file rolling
+  # Set LOG_FILE env var to override log directory (default: ./logs/user-service.log)
 
 app:
   kafka:

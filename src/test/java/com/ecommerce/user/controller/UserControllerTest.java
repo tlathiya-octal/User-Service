@@ -74,6 +74,7 @@ class UserControllerTest {
                         .with(jwt())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new UserRequest(
+                                null,               // userId — optional, omitted by external callers
                                 "user@example.com",
                                 "John",
                                 "Doe",

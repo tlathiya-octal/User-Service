@@ -1,5 +1,11 @@
 package com.ecommerce.user.config;
 
+// ============================================================
+// KAFKA CONSUMER — TEMPORARILY DISABLED (REST mode active)
+// Uncomment this entire class to re-enable Kafka consuming.
+// ============================================================
+
+/*
 import com.ecommerce.events.UserCreatedEvent;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -56,4 +62,9 @@ public class KafkaConsumerConfig {
         factory.setCommonErrorHandler(kafkaErrorHandler);
         return factory;
     }
+}
+*/
+
+// Empty placeholder — required to keep the package valid.
+public class KafkaConsumerConfig {
 }

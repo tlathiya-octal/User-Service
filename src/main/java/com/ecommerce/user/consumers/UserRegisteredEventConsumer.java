@@ -1,6 +1,12 @@
 package com.ecommerce.user.consumers;
 
-import com.ecommerce.events.UserCreatedEvent;
+// ============================================================
+// KAFKA CONSUMER LISTENER — TEMPORARILY DISABLED (REST mode)
+// User profiles are now created synchronously via REST call from
+// auth-service. Uncomment this class to re-enable Kafka consumption.
+// ============================================================
+
+/*
 import com.ecommerce.events.UserCreatedEvent;
 import com.ecommerce.user.event.CorrelationIdProvider;
 import com.ecommerce.user.service.UserService;
@@ -53,4 +59,9 @@ public class UserRegisteredEventConsumer {
         }
         return new String(header, StandardCharsets.UTF_8);
     }
+}
+*/
+
+// Empty placeholder — required to keep the package valid.
+public class UserRegisteredEventConsumer {
 }

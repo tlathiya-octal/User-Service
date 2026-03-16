@@ -55,7 +55,7 @@ class UserServiceImplTest {
 
     @Test
     void createUserShouldPersistNormalizedEmail() {
-        UserRequest request = new UserRequest("User@Example.com", "John", "Doe", "9999999999", null, null, null);
+        UserRequest request = new UserRequest(null, "User@Example.com", "John", "Doe", "9999999999", null, null, null);
         User entity = new User();
         User saved = buildUser();
         UserResponse response = buildResponse(saved);
@@ -74,7 +74,7 @@ class UserServiceImplTest {
 
     @Test
     void createUserShouldRejectDuplicateEmail() {
-        UserRequest request = new UserRequest("user@example.com", "John", "Doe", "9999999999", null, null, null);
+        UserRequest request = new UserRequest(null, "user@example.com", "John", "Doe", "9999999999", null, null, null);
         when(userRepository.existsByEmailIgnoreCase("user@example.com")).thenReturn(true);
 
         assertThatThrownBy(() -> userService.createUser(request))
